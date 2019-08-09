@@ -1,4 +1,5 @@
 @import "~antd/dist/antd.css";
+@import "./wisetracker.less";
 
 .App {
   text-align: center;
