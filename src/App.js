@@ -10,7 +10,9 @@ import {
   Button,
   Table,
   Modal,
-  Dropdown
+  Dropdown,
+  Row,
+  Col
 } from "antd";
 import "./App.css";
 import cogs from "./assets/cogs.svg";
@@ -108,7 +110,53 @@ class App extends React.Component {
   state = {
     collapsed: false,
     visible: false,
-    loading: false
+    loading: false,
+    windowBreakpoint: false
+  };
+
+  componentDidMount = () => {
+    window.addEventListener("resize", this.windowBreakpoint);
+  };
+  componentWillUnmount = () => {
+    this.removeEventListener();
+  };
+
+  removeEventListener = () => {
+    // 이벤트리스너 삭제용 함수
+    window.removeEventListener("resize", this.windowBreakpoint);
+  };
+  windowBreakpoint = () => {
+    if (window.innerWidth < 1600) {
+      this.setState({
+        windowBreakpoint: "xxl"
+      });
+    }
+    if (window.innerWidth < 1200) {
+      this.setState({
+        windowBreakpoint: "xl"
+      });
+    }
+    if (window.innerWidth < 992) {
+      this.setState({
+        windowBreakpoint: "lg"
+      });
+    }
+    if (window.innerWidth < 768) {
+      this.setState({
+        windowBreakpoint: "md"
+      });
+    }
+    if (window.innerWidth < 576) {
+      this.setState({
+        windowBreakpoint: "sm"
+      });
+    }
+    if (window.innerWidth < 480) {
+      this.setState({
+        windowBreakpoint: "xs"
+      });
+    }
+    console.log(this.state.windowBreakpoint);
   };
 
   toggle = () => {
@@ -275,6 +323,20 @@ class App extends React.Component {
                 </TabPane>
               </Tabs>
             </div>
+            <Row gutter={25}>
+              <Col className="gutter-row" span={6}>
+                <div className="container-content" />
+              </Col>
+              <Col className="gutter-row" span={6}>
+                <div className="container-content">ㅁㄴㅇ</div>
+              </Col>
+              <Col className="gutter-row" span={6}>
+                <div className="container-content">ㅁㄴㅇ</div>
+              </Col>
+              <Col className="gutter-row" span={6}>
+                <div className="container-content">ㅁㄴㅇ</div>
+              </Col>
+            </Row>
           </Content>
         </Layout>
         <Modal
