@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   Layout,
   Menu,
@@ -9,14 +9,30 @@ import {
   Input,
   Button,
   Table,
-  Modal
+  Modal,
+  Dropdown
 } from "antd";
 import "./App.css";
 import cogs from "./assets/cogs.svg";
+import edit from "./assets/edit.svg";
+import trash from "./assets/trash-alt.svg";
+import collapslnb from "./assets/bars.svg";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 const { TabPane } = Tabs;
+const menu = (
+  <Menu>
+    <Menu.Item key="0">
+      <img src={edit} alt="Edit" className="dwopdown-icon" />
+      Edit
+    </Menu.Item>
+    <Menu.Item key="1">
+      <img src={trash} alt="Delete" className="dwopdown-icon" />
+      Delete
+    </Menu.Item>
+  </Menu>
+);
 const columns = [
   {
     title: "Name",
@@ -45,7 +61,11 @@ const columns = [
   {
     title: "Edit",
     dataIndex: "edit",
-    render: (text, record) => <img src={cogs} />,
+    render: (text, record) => (
+      <Dropdown overlay={menu} trigger={["click"]}>
+        <img src={cogs} alt="관리" />
+      </Dropdown>
+    ),
     filterMultiple: false
   }
 ];
@@ -139,13 +159,15 @@ class App extends React.Component {
           }}
           collapsedWidth="73"
         >
-          <Icon
+          <img
             className="trigger"
+            src={collapslnb}
+            alt="Edit"
             type={this.state.collapsed ? "menu-unfold" : "menu-fold"}
             onClick={this.toggle}
           />
           <div className="logo" />
-          <Menu mode="inline" defaultSelectedKeys={["4"]}>
+          <Menu mode="inline" defaultSelectedKeys={["3"]}>
             <SubMenu
               key="sub1"
               title={
@@ -158,19 +180,19 @@ class App extends React.Component {
               <Menu.Item key="3">Dashboard List</Menu.Item>
               <Menu.Item key="4">Datacard List</Menu.Item>
             </SubMenu>
-            <Menu.Item key="2">
+            <Menu.Item key="5">
               <Icon type="video-camera" />
               <span className="nav-text">Live Tracker</span>
             </Menu.Item>
-            <Menu.Item key="3">
+            <Menu.Item key="6">
               <Icon type="upload" />
               <span className="nav-text">Audience</span>
             </Menu.Item>
-            <Menu.Item key="4">
+            <Menu.Item key="7">
               <Icon type="bar-chart" />
               <span className="nav-text">Advertise</span>
             </Menu.Item>
-            <Menu.Item key="5">
+            <Menu.Item key="8">
               <Icon type="cloud-o" />
               <span className="nav-text">Settings</span>
             </Menu.Item>
@@ -180,7 +202,7 @@ class App extends React.Component {
           <Content className="container">
             <div className="page-title">Setting</div>
             <div className="container-content">
-              <Tabs defaultActiveKey="2" animated={false}>
+              <Tabs defaultActiveKey="3" animated={false}>
                 <TabPane tab="Basic" key="1">
                   <div className="container-tabpane">
                     <Descriptions
@@ -206,10 +228,10 @@ class App extends React.Component {
                     <Button type="default">CANCEL</Button>
                     <Button type="danger">DELETE</Button>
                     <Button type="primary">SAVE</Button>
-                    <Button type="primary" loading="true">
+                    <Button type="primary" loading>
                       SAVE
                     </Button>
-                    <Button disabled="true" type="primary">
+                    <Button disabled={true} type="primary">
                       SAVE
                     </Button>
                   </div>
@@ -230,7 +252,23 @@ class App extends React.Component {
                   </div>
                 </TabPane>
                 <TabPane tab="SDK Guide" key="3">
-                  Content of Tab Pane 3
+                  <div className="container-tabpane">
+                    <Tabs
+                      defaultActiveKey="1"
+                      tabPosition="left"
+                      animated={false}
+                    >
+                      <TabPane tab="Overview" key="1">
+                        overview
+                      </TabPane>
+                      <TabPane tab="JAVA" key="2">
+                        java
+                      </TabPane>
+                      <TabPane tab="Swift" key="3">
+                        swift
+                      </TabPane>
+                    </Tabs>
+                  </div>
                 </TabPane>
                 <TabPane tab="NAVER Pay" key="4">
                   Content of Tab Pane 3

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="136" height="27" viewBox="0 0 136 27">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#121212" d="M11.67 0L0 6.566v13.131l11.67 6.566 11.669-6.566V6.566L11.669 0zm8.847 8.153l-8.333-4.689V1.447l10.125 5.698v11.973l-10.125-5.697v-2.04l8.333 4.69V8.153zM1.028 7.145l10.127-5.698v2.017L2.82 8.154v7.917l8.334-4.69v2.04L1.028 19.118V7.145zm11.156-.298V4.623l7.304 4.11v2.224l-7.304-4.11zM3.85 8.732l7.305-4.11v2.225l-7.305 4.11V8.732zm8.334 1.492V8.006l7.304 4.11v2.218l-7.304-4.11zM3.85 12.116l7.305-4.11v2.218l-7.305 4.11v-2.218zm8.334 10.052v-7.59l9.096 5.12-6.743 3.794-2.353-1.324zm-10.126-2.47l9.097-5.12v7.59l-2.353 1.324-6.744-3.795zM9.83 24.07l1.838-1.035 1.839 1.035-1.839 1.034-1.838-1.034z"/>
+        <text fill="#2B2B2B" font-family="SourceHanSansK-Normal, Source Han Sans K" font-size="15">
+            <tspan x="31" y="19">WISE</tspan> <tspan x="66.025" y="19" font-family="SourceHanSansK-Heavy, Source Han Sans K" font-weight="600">TRACKER</tspan>
+        </text>
+    </g>
+</svg>

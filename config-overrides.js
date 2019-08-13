@@ -39,8 +39,10 @@ module.exports = override(
       "@tabs-hover-color": "#3B3B3B;",
       "@tabs-active-color": "@primary-7;",
       "@tabs-card-gutter": "8px;",
-      "@tabs-card-tab-active-border-top": "2px solid transparent;",
-      "@modal-mask-bg": "fade(@white, 75%);"
+      "@tabs-card-tab-active-border-top": "3px solid transparent;",
+      "@modal-mask-bg": "fade(@white, 75%);",
+
+      "@menu-item-active-bg": "transparent"
     }
   })
 );
