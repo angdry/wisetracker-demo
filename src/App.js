@@ -12,17 +12,28 @@ import {
   Modal,
   Dropdown,
   Row,
-  Col
+  Col,
+  Card,
+  Radio,
+  Form,
+  Collapse,
+  DatePicker
 } from "antd";
 import "./App.css";
 import cogs from "./assets/cogs.svg";
 import edit from "./assets/edit.svg";
 import trash from "./assets/trash-alt.svg";
 import collapslnb from "./assets/bars.svg";
+import moment from "moment";
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 const { TabPane } = Tabs;
+const { Search } = Input;
+const { Panel } = Collapse;
+const { RangePicker } = DatePicker;
+const FormItem = Form.Item;
+
 const menu = (
   <Menu>
     <Menu.Item key="0">
@@ -63,6 +74,7 @@ const columns = [
   {
     title: "Edit",
     dataIndex: "edit",
+    width: 80,
     render: (text, record) => (
       <Dropdown overlay={menu} trigger={["click"]}>
         <img src={cogs} alt="관리" />
@@ -72,32 +84,15 @@ const columns = [
   }
 ];
 
-const data = [
-  {
-    key: "1",
-    name: "John Brown1",
-    age: 32,
-    address: "New York No. 1 Lake Park"
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park"
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park"
-  },
-  {
-    key: "4",
-    name: "Jim Red",
-    age: 32,
-    address: "London No. 2 Lake Park"
-  }
-];
+const data = [];
+for (let i = 1; i <= 500; i++) {
+  data.push({
+    key: i,
+    name: "John Brown",
+    age: `${i}2`,
+    address: `New York No. ${i} Lake Park`
+  });
+}
 
 function onChange(checked) {
   console.log(`switch to ${checked}`);
@@ -111,21 +106,32 @@ class App extends React.Component {
     collapsed: false,
     visible: false,
     loading: false,
-    windowBreakpoint: false
+    windowBreakpoint: false,
+    size: "default",
+    collapseSize: 73,
+    globalFilter: false
   };
 
   componentDidMount = () => {
-    window.addEventListener("resize", this.windowBreakpoint);
+    this.windowBreakpoint();
   };
   componentWillUnmount = () => {
     this.removeEventListener();
   };
 
+  handleSizeChange = e => {
+    this.setState({ size: e.target.value });
+    console.log(e.target.value);
+  };
+  onShowSizeChange(current, pageSize) {
+    console.log(current, pageSize);
+  }
   removeEventListener = () => {
     // 이벤트리스너 삭제용 함수
     window.removeEventListener("resize", this.windowBreakpoint);
   };
   windowBreakpoint = () => {
+    window.addEventListener("resize", this.windowBreakpoint);
     if (window.innerWidth < 1600) {
       this.setState({
         windowBreakpoint: "xxl"
@@ -156,6 +162,17 @@ class App extends React.Component {
         windowBreakpoint: "xs"
       });
     }
+    // 휴대폰 사이즈에서 sider 사이즈 줄이기
+    if (this.state.windowBreakpoint === "sm") {
+      this.setState({
+        collapseSize: 0
+      });
+    } else {
+      this.setState({
+        collapseSize: 73
+      });
+    }
+
     console.log(this.state.windowBreakpoint);
   };
 
@@ -186,7 +203,49 @@ class App extends React.Component {
   handleCancel = () => {
     this.setState({ visible: false });
   };
+
+  globalFilter = value => {
+    if (this.state.globalFilter === false) {
+      return (
+        <div className="container-filter-prev">
+          <div className="trigger-filter" />
+          <FormItem>
+            <img src={cogs} alt="관리" />
+            <RangePicker
+              ranges={{
+                Today: [moment(), moment()],
+                "This Month": [
+                  moment().startOf("month"),
+                  moment().endOf("month")
+                ]
+              }}
+              showTime
+              format="YYYY/MM/DD HH:mm:ss"
+              onChange={onChange}
+            />
+          </FormItem>
+        </div>
+      );
+    } else {
+      return "";
+    }
+  };
+
+  openGlobalFilter = value => {
+    console.log(value);
+    if (value.length === 0) {
+      this.setState({
+        globalFilter: false
+      });
+    } else {
+      this.setState({
+        globalFilter: true
+      });
+    }
+    console.log(this.state.globalFilter);
+  };
   render() {
+    const { state } = this;
     return (
       <Layout>
         <Sider
@@ -205,7 +264,7 @@ class App extends React.Component {
           onCollapse={(collapsed, type) => {
             this.toggle();
           }}
-          collapsedWidth="73"
+          collapsedWidth={this.state.collapseSize}
         >
           <img
             className="trigger"
@@ -250,7 +309,7 @@ class App extends React.Component {
           <Content className="container">
             <div className="page-title">Setting</div>
             <div className="container-content">
-              <Tabs defaultActiveKey="3" animated={false}>
+              <Tabs defaultActiveKey="1" animated={false}>
                 <TabPane tab="Basic" key="1">
                   <div className="container-tabpane">
                     <Descriptions
@@ -323,20 +382,214 @@ class App extends React.Component {
                 </TabPane>
               </Tabs>
             </div>
+            <div className="container-content">
+              <div className="container-filter">
+                <Collapse
+                  bordered={false}
+                  onChange={value => this.openGlobalFilter(value)}
+                  defaultActiveKey={"1"}
+                >
+                  <Panel header={this.globalFilter()} key="1" showArrow={false}>
+                    <Tabs defaultActiveKey="1" animated={false}>
+                      <TabPane tab="Basic" key="1">
+                        <div className="container-tabpane">
+                          <Row gutter={25}>
+                            <Col className="gutter-row" sm={12} xl={6} />
+                            <Col className="gutter-row" sm={12} xl={6} />
+                          </Row>
+                          <Descriptions layout="vertical">
+                            <Descriptions.Item
+                              label="Date Range"
+                              style={{ minWidth: 350 }}
+                            >
+                              <RangePicker
+                                ranges={{
+                                  Today: [moment(), moment()],
+                                  "This Month": [
+                                    moment().startOf("month"),
+                                    moment().endOf("month")
+                                  ],
+                                  "This Month123": [
+                                    moment().startOf("month"),
+                                    moment().endOf("month")
+                                  ],
+                                  "This Month412": [
+                                    moment().startOf("month"),
+                                    moment().endOf("month")
+                                  ],
+                                  "This Month123": [
+                                    moment().startOf("month"),
+                                    moment().endOf("month")
+                                  ]
+                                }}
+                                showTime
+                                format="YYYY/MM/DD HH:mm:ss"
+                                onChange={onChange}
+                              />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Date Type">
+                              <Radio.Group
+                                size="default"
+                                value={state.size}
+                                onChange={this.handleSizeChange}
+                                buttonStyle="solid"
+                              >
+                                <Radio.Button value="default">
+                                  시간
+                                </Radio.Button>
+                                <Radio.Button value="middle">일</Radio.Button>
+                                <Radio.Button value="small">주</Radio.Button>
+                                <Radio.Button value="small">월</Radio.Button>
+                              </Radio.Group>
+                            </Descriptions.Item>
+                          </Descriptions>
+                        </div>
+                      </TabPane>
+                      <TabPane tab="Metrics" key="2">
+                        <div className="container-tabpane">
+                          ㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅁㅇㄴ
+                        </div>
+                      </TabPane>
+                    </Tabs>
+                    <div className="container-savebar">
+                      <span className="save-message">
+                        저장에 성공하였습니다
+                      </span>
+                      <Button type="default">CANCEL</Button>
+                      <Button type="primary">SAVE</Button>
+                    </div>
+                  </Panel>
+                </Collapse>
+              </div>
+            </div>
             <Row gutter={25}>
-              <Col className="gutter-row" span={6}>
-                <div className="container-content" />
+              <Col className="gutter-row" sm={12} xl={6}>
+                <Card
+                  className="container-content KPI-3metrics"
+                  bordered={false}
+                >
+                  <div>
+                    <span className="card-title-20">Total Installs</span>
+                    <span className="card-num-18">601,474</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">3rd Party</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(97%)</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">In-App</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(96%)</span>
+                  </div>
+                </Card>
               </Col>
-              <Col className="gutter-row" span={6}>
-                <div className="container-content">ㅁㄴㅇ</div>
+              <Col className="gutter-row" sm={12} xl={6}>
+                <Card
+                  className="container-content KPI-3metrics"
+                  bordered={false}
+                >
+                  <div>
+                    <span className="card-title-20">Total NRUs</span>
+                    <span className="card-num-18">601,474</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">3rd Party</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(97%)</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">In-App</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(96%)</span>
+                  </div>
+                </Card>
               </Col>
-              <Col className="gutter-row" span={6}>
-                <div className="container-content">ㅁㄴㅇ</div>
+              <Col className="gutter-row" sm={12} xl={6}>
+                <Card
+                  className="container-content KPI-3metrics"
+                  bordered={false}
+                >
+                  <div>
+                    <span className="card-title-20">Registration Rate</span>
+                    <span className="card-num-18">601,474</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">3rd Party</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(97%)</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">In-App</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(96%)</span>
+                  </div>
+                </Card>
               </Col>
-              <Col className="gutter-row" span={6}>
-                <div className="container-content">ㅁㄴㅇ</div>
+              <Col className="gutter-row" sm={12} xl={6}>
+                <Card
+                  className="container-content KPI-3metrics"
+                  bordered={false}
+                >
+                  <div>
+                    <span className="card-title-20">Total Revenue</span>
+                    <span className="card-num-18">601,474</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">3rd Party</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(97%)</span>
+                  </div>
+                  <div>
+                    <span className="card-title-18">In-App</span>
+                    <span className="card-num-16">601,474</span>
+                    <span className="card-num-12">(96%)</span>
+                  </div>
+                </Card>
               </Col>
             </Row>
+            <div className="container-content">
+              <div className="container-table">
+                <Row gutter={0} className="table-header">
+                  <Col sm={24} md={12}>
+                    <span className="font-20 font-bold align-left">
+                      Media Performance
+                    </span>
+                  </Col>
+                  <Col sm={24} md={12} className="align-right">
+                    <FormItem>
+                      <Search
+                        placeholder="Search text"
+                        onSearch={value => console.log(value)}
+                        style={{ width: 200 }}
+                      />
+                      <Radio.Group
+                        size="default"
+                        value={state.size}
+                        onChange={this.handleSizeChange}
+                        buttonStyle="solid"
+                      >
+                        <Radio.Button value="default">Default</Radio.Button>
+                        <Radio.Button value="middle">M</Radio.Button>
+                        <Radio.Button value="small">S</Radio.Button>
+                      </Radio.Group>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Table
+                  size={this.state.size}
+                  columns={columns}
+                  dataSource={data}
+                  onChange={onPaging}
+                  pagination={{
+                    defaultCurrent: 1,
+                    pageSize: 10,
+                    pageSizeOptions: ["10", "20", "30", "50", "100"],
+                    showSizeChanger: true
+                  }}
+                />
+              </div>
+            </div>
           </Content>
         </Layout>
         <Modal
